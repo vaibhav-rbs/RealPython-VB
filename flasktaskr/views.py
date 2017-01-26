@@ -29,7 +29,6 @@ def tasks():
             status='1').order_by(Task.due_date.asc())
     closed_tasks = db.session.query(Task).filter_by(
             status='0').order_by(Task.due_date.asc())
-    g.db.close()
     return render_template(
             'tasks.html',
             form=AddTaskForm(request.form),
@@ -45,16 +44,21 @@ def logout():
 
 @app.route('/',methods=['GET', 'POST'])
 def login():
+    error = None
+    form = LoginForm(request.form)
     if request.method == 'POST':
-        if (request.form['username'] != app.config['USERNAME'] or
-            request.form['password'] != app.config['PASSWORD']):
-            error = "Invalid Credentials. Please try again"
-            return render_template('login.html', error=error)
+        if form.validate_on_submit():
+            user = User.query.filter_by(name=request.form['name']).first()
+            if user is not None and user.password == request.form['password']:
+                session['logged_in'] = True
+                flash('Welcome!')
+                return redirect(url_for('tasks'))
+            else:
+                error = 'Invalid username or Password'
         else:
-            session['logged_in'] = True
-            flash('Welcome')
-            return redirect(url_for('tasks'))
-    return render_template('login.html')
+            error = 'Both fields are required.'
+    return render_template('login.html',form=form,error=error)
+
 
 @app.route('/complete/',methods=['POST'])
 @login_required
@@ -93,7 +97,7 @@ def delete_entry(task_id):
 def register():
     error = None
     form = RegisterForm(request.form)
-    if request.methods == "POST":
+    if request.method == "POST":
         if form.validate_on_submit():
             new_user = User(form.name.data,
                     form.email.data,
@@ -103,5 +107,7 @@ def register():
             db.session.commit()
             flash('Thanks for registering, Please login')
             return redirect(url_for('login'))
-    return render_template('register.html',error=error,form=form)
+        else:
+            flash(form.errors)
+    return render_template('register.html',form=form,error=error)
 
