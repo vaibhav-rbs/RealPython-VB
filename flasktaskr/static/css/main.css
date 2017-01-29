@@ -34,3 +34,12 @@ button{
     color: #fff;
     padding: 0.5em;
 }
+
+.inline-form .input-group{
+    display: inline-block;
+    margin: 10px 5px;
+}
+
+.input-group input{
+    width: 100%;
+}
