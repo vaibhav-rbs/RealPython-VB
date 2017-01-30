@@ -2,6 +2,7 @@ from forms import AddTaskForm,RegisterForm,LoginForm
 from functools import wraps
 from flask import Flask, flash, redirect, render_template, request, session, url_for
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.exc import IntegrityError
 import datetime
 
 app = Flask(__name__)
@@ -11,6 +12,13 @@ db = SQLAlchemy(app)
 from models import Task,User
 
 
+def open_tasks():
+    return db.session.query(Task).filter_by(
+            status='1').order_by(Task.due_date.asc())
+
+def closed_tasks():
+    return db.session.query(Task).filter_by(
+            status='0').order_by(Task.due_date.asc())
 
 def login_required(test):
     @wraps(test)
@@ -26,15 +34,11 @@ def login_required(test):
 @app.route('/tasks')
 @login_required
 def tasks():
-    open_tasks = db.session.query(Task).filter_by(
-            status='1').order_by(Task.due_date.asc())
-    closed_tasks = db.session.query(Task).filter_by(
-            status='0').order_by(Task.due_date.asc())
     return render_template(
             'tasks.html',
             form=AddTaskForm(request.form),
-            open_tasks=open_tasks,
-            closed_tasks=closed_tasks
+            open_tasks=open_tasks(),
+            closed_tasks=closed_tasks()
             )
 
 @app.route('/logout/')
@@ -67,6 +71,7 @@ def login():
 @login_required
 def new_task():
     form = AddTaskForm(request.form)
+    error=None
     if request.method == "POST":
         if form.validate_on_submit():
             new_task = Task(
@@ -80,9 +85,13 @@ def new_task():
             db.session.add(new_task)
             db.session.commit()
             flash('New Entry was sucessfully posted, Thanks')
-        else:
-            flash(form.errors)
-        return redirect(url_for('tasks'))
+            return redirect(url_for('tasks'),form=form, error=error)
+        return render_template('tasks.html',
+                form=form,
+                error=error,
+                open_tasks=open_tasks(),
+                closed_tasks=closed_tasks()
+                )
 
 @app.route('/complete/<int:task_id>/')
 @login_required
@@ -110,11 +119,19 @@ def register():
                     form.email.data,
                     form.password.data
                     )
-            db.session.add(new_user)
-            db.session.commit()
-            flash('Thanks for registering, Please login')
-            return redirect(url_for('login'))
-        else:
-            flash(form.errors)
+            try:
+                db.session.add(new_user)
+                db.session.commit()
+                flash('Thanks for registering, Please login')
+                return redirect(url_for('login'))
+            except IntegrityError:
+                error = "That usename/email already exists."
+                return render_template('register.html', form=form,
+                        error=error)
     return render_template('register.html',form=form,error=error)
 
+def flash_errors(form):
+    for field,errors in form.errors.item():
+        for error in errors:
+            flash("Errors in the %s field -%s" % (
+                getattr(form,field).label.text,error),'error')
