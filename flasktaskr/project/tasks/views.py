@@ -69,8 +69,8 @@ def new_task():
                 form.name.data,
                 form.due_date.data,
                 form.priority.data,
-                datetime.datetime.utcnow(),
                 '1',
+                datetime.datetime.utcnow(),
                 session['user_id']
             )
             db.session.add(new_task)
