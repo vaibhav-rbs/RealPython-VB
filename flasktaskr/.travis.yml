@@ -1,0 +1,17 @@
+language:
+- python
+python:
+- '3.5'
+- '2.7'
+install:
+- pip install -r requirements.txt
+script:
+- nosetests
+deploy:
+  provider: heroku
+  api_key:
+    secure: oaoRUtbctVcnak9kMMk5JuTARfwbmczUrb2dIOePj0Y8+/41MS5aMTGfkLO2iduBeo6YFlAmtcyzGIXauXpip6kJAG5VG+FaVTIRYSm1vjke3feM8wyEdlgEkEAk/EngW2imWZmLwGO/WfzRTrXH5CLYx480z/Mog0RI0d8G2fV28xKOJTXFvYEHvGHSw59w5R+yarASuvdhCOmjxWuDUL/oZxdBYQISRUMyQTu+Mu8V6Jm+Lw3Hwxk+3h2Of+qzKSDXJLQWyBkkdNnQ4wz7UT2bouE7ldlEjelg60/v5IuJHpax8tJKu52MZNdVqUA4j6AJRyqiM9BhaCCQ7co6BYhOlUNPsPdiP0wyFgU/WmPq6qZX93nlP9jKeIugo/Vl8ZZwsDUjfqJswGwDyaxLC8Rit+fugVj0GlhTS2wunM0+b+sjCW3QX6+dEPZKSQL49O/uApLq93kf7+pl5Q9Xf0RjWD10e/twJS+wppOyrcKaHMJfXIJJ2UaZkrXk3R4qS8ZSTXaI42d/g88rKz3xZVN0NFZ0FNIO4kFCmY1yUQarbz7OfnGWVJeoU3xZb3zpFSAaoQH3/qH34s3ZoIdh3uRRK7dJla/P1G0NEWQYzLXiNBvbmVbyXIwnU0Y418xi2iyHNo1Ho5p69ivxHy7QkK6J19NzVnBuTo7gc3l8CtM=
+  app: afternoon-mountain-67510
+  on:
+    repo: vaibhav-rbs/RealPython-VB
+    branch: heroku
