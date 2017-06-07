@@ -2,7 +2,6 @@
 __pycache__/
 *.py[cod]
 *$py.class
-
 # C extensions
 *.so
 
@@ -89,3 +88,6 @@ ENV/
 
 # Rope project settings
 .ropeproject
+
+# OSX
+.DS_Store
