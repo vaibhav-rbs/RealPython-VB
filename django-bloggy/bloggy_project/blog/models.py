@@ -8,4 +8,4 @@ class Post(models.Model):
 	content = models.TextField()
 
 def __str__(self):
-	return "{0}/{1}/{2}/{3}\n".format(self.id, self.created_at,self.title,self.content)
+	return self.title
