@@ -39,7 +39,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # Local Apps
     'blog',
-    'django_extensions'
+    #3rd Party Apps
+    'django_extensions',
+    'django_forms_bootstrap'
 ]
 
 MIDDLEWARE = [

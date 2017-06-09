@@ -1,0 +1,21 @@
+{% extends '_base.html' %}
+{% block content %}
+{% load bootstrap_tags %}
+<h2> Add Posts </h2>
+<form id="post_form" method="post" actions"blog/add_posts/" enctype ="multipart/form-data">
+{% csrf_token %}
+
+{{ form | as_bootstrap }}
+<!--
+{% for hidden in form.hidden_fields %}
+{{ hidden }}
+{% endfor %}
+{% for field in form.visible_fields %}
+    {{field.errors}}
+    {{label_tag}}
+    {{field}}
+{% endfor %}
+-->
+<input type="submit" name="submit" value="Create Post">
+</form>
+{% endblock %}
