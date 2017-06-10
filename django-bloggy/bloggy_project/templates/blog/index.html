@@ -3,7 +3,7 @@
 {% if latest_posts %}
 <ul>
     {% for post in latest_posts %}
-    <h3><a href="/blog/{{ post.url }}">{{post.title}} </a></h3>
+    <h3><a href="/blog/{{ post.slug }}">{{post.title}} </a></h3>
     <p><em>{{post.created_at}}</em></p>
     <p>{{ postt.content }}</p>
     <br>
@@ -13,6 +13,6 @@
 <h4> Must see:</h4>
 <ul>
     {% for popular_post in popular_posts %}
-    <li><a href="/blog/{{ popular_post.url }}">{{ popular_post.title }}</a></li>
+    <li><a href="/blog/{{ popular_post.slug}}">{{ popular_post.title }}</a></li>
     {% endfor %}
 {% endblock %}
